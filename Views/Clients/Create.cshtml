@@ -1,0 +1,88 @@
+﻿@model Clients.Models.Class
+
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/_LayoutPage1.cshtml";
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" />
+}
+
+<h2>Create</h2>
+
+@using (Html.BeginForm("Create", "Clients", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.TextEn)
+        @Html.TextBoxFor(model => model.TextEn, new { @class = "form-control" })
+        @Html.ValidationMessageFor(model => model.TextEn, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Value)
+        @Html.TextBoxFor(model => model.Value, new { @class = "form-control" })
+        @Html.ValidationMessageFor(model => model.Value, "", new { @class = "text-danger" })
+    </div>
+     @*<div class="form-group">
+            @Html.LabelFor(model => model.ImagePath, "ImagePath")
+            @Html.TextBoxFor(model => model.ImagePath, new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.ImagePath, "", new { @class = "text-danger" })
+        </div>*@
+
+
+
+        <div class="form-group">
+                <label for="file">Upload Image</label>
+                <input type="file" name="file" id="fileupload" class="form-control" />
+               @Html.ValidationMessageFor(model => model.ImagePath, "", new { @class = "text-danger" })
+            </div>
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Create" class="btn btn-primary" />
+        </div>
+    </div>
+}
+<script>
+    $(function () {
+        $('#fileupload').change(function () {
+            debugger
+            var fileUpload = $("#fileupload")[0];
+
+            fileExtension = ['jpeg', 'jpg', 'png', 'gif', 'bmp'];
+            if ($.inArray($(fileUpload).val().split('.').pop().toLowerCase(), fileExtension) == -1) {
+                $("#divInvalidImageTypeEn").text("Please select a valid Image file.");
+                $('#btnUpdate').attr('disabled', true);
+                $('#btnAdd').attr('disabled', true);
+                return false;
+            }
+            else {
+                if (typeof (fileUpload.files) != "undefined") {
+                    var reader = new FileReader();
+                    reader.readAsDataURL(fileUpload.files[0]);
+                    reader.onload = function (e) {
+                        var image = new Image();
+                        image.src = e.target.result;
+                        image.onload = function () {
+                            //var height = this.height;
+                            //var width = this.width;
+                            //if (height == 650 && width == 1920) {
+                            //    $("#divInvalidImageTypeEn").text("");
+                            //    $('#btnAdd').attr('disabled', false);
+                            //    $('#btnUpdate').attr('disabled', false);
+                            //    return true;
+                            //}
+                            $("#divInvalidImageTypeEn").text("");
+                            $('#btnUpdate').attr('disabled', false);
+                            $('#btnAdd').attr('disabled', false);
+                            return true;
+                        };
+                    }
+                }
+            }
+        })
+    });
+</script>
+
+
